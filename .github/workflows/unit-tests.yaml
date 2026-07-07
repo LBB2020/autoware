@@ -1,0 +1,31 @@
+name: unit-tests
+
+on:
+  pull_request:
+    paths:
+      - tests/**
+      - ansible/roles/telegraf/files/**
+      - docker/docker-entrypoint.sh
+      - setup-dev-env.sh
+      - ansible/scripts/**
+      - .webauto-ci/**
+      - .github/workflows/unit-tests.yaml
+  push:
+    branches:
+      - main
+    paths:
+      - tests/**
+
+jobs:
+  shell-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install bats-core
+        run: |
+          git clone --depth 1 https://github.com/bats-core/bats-core.git /tmp/bats-core
+          sudo /tmp/bats-core/install.sh /usr/local
+
+      - name: Run unit tests
+        run: bats --recursive tests/
