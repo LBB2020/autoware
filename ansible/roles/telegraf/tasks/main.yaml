@@ -76,6 +76,15 @@
     mode: 0755
   become: true
 
+- name: Copy get_telegraf_json_common.sh to /opt/autoware/bin
+  become: true
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/get_telegraf_json_common.sh"
+    dest: /opt/autoware/bin/get_telegraf_json_common.sh
+    owner: root
+    group: root
+    mode: 0755
+
 - name: Copy get_telegraf_proccpu_json.sh to /opt/autoware/bin
   become: true
   ansible.builtin.copy:

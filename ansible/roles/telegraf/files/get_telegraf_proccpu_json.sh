@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# shellcheck source=ansible/roles/telegraf/files/get_telegraf_json_common.sh
+source "$(dirname "$(readlink -f "$0")")/get_telegraf_json_common.sh"
+
 SAMPLING_SEC=5
 
-echo "{"
+telegraf_json_open
 pidstat -u -h -l "${SAMPLING_SEC}" 1 |
     tail -n +4 |
     awk '{ cpu=$8; $1=$2=$3=$4=$5=$6=$7=$8=$9=""; print cpu,$0 }' |
@@ -11,10 +14,6 @@ pidstat -u -h -l "${SAMPLING_SEC}" 1 |
         if [[ ${cpu%%.*} -le 0 ]]; then
             continue
         fi
-        cmd="${cmd// /_}"
-        cmd="${cmd//=/_}"
-        cmd="${cmd:0:50}"
-        echo "\"${cmd}\":${cpu},"
+        telegraf_json_entry "$cmd" "$cpu"
     done
-echo '"z":0'
-echo "}"
+telegraf_json_close
