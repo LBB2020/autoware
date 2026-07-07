@@ -1,4 +1,10 @@
 #!/bin/bash
+set -eo pipefail
+
+if ! command -v pidstat >/dev/null 2>&1; then
+    echo "ERROR: pidstat is not installed (part of sysstat package)" >&2
+    exit 1
+fi
 
 SAMPLING_SEC=5
 

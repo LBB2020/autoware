@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/bin/bash
+set -euo pipefail
 
 : "${WEBAUTO_CI_SOURCE_PATH:?is not set}"
 : "${WEBAUTO_CI_DEBUG_BUILD:?is not set}"
@@ -30,6 +31,10 @@ sudo -E apt-get -y update
 
 # shellcheck disable=SC2012
 ROS_DISTRO=$(ls -1 /opt/ros | head -1)
+if [ -z "$ROS_DISTRO" ]; then
+    echo "ERROR: No ROS distribution found in /opt/ros" >&2
+    exit 1
+fi
 # shellcheck disable=SC1090
 source "/opt/ros/$ROS_DISTRO/setup.bash"
 rosdep update

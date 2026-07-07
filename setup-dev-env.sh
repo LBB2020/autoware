@@ -7,7 +7,7 @@
 # Usage: setup-dev-env.sh <ros2_installation_type('core' or 'universe')> [-y] [-v] [--no-nvidia]
 # Note: -y option is only for CI.
 
-set -e
+set -eo pipefail
 
 echo -e "\e[33m[DEPRECATED] setup-dev-env.sh will be removed on 2026-05-24.\e[m" >&2
 echo -e "\e[33mMigrate to: bash ansible/scripts/install-ansible.sh && ansible-playbook autoware.dev_env.install_dev_env [--tags ...]\e[m" >&2
