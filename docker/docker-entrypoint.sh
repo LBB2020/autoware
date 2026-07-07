@@ -1,10 +1,18 @@
 #!/bin/bash
-set -e
+set -eo pipefail
+
+# Validate required environment variables
+: "${USERNAME:?USERNAME must be set}"
+: "${ROS_DISTRO:?ROS_DISTRO must be set}"
 
 # Remap aw user to match host UID/GID (avoids permission issues with mounted volumes)
-if [ -n "${HOST_UID}" ] && [ -n "${HOST_GID}" ]; then
-    usermod -u "${HOST_UID}" "${USERNAME}" >/dev/null 2>&1 || true
-    groupmod -g "${HOST_GID}" "${USERNAME}" >/dev/null 2>&1 || true
+if [ -n "${HOST_UID:-}" ] && [ -n "${HOST_GID:-}" ]; then
+    if ! usermod -u "${HOST_UID}" "${USERNAME}" >/dev/null; then
+        echo "[entrypoint] WARN: failed to set UID=${HOST_UID} for user '${USERNAME}'" >&2
+    fi
+    if ! groupmod -g "${HOST_GID}" "${USERNAME}" >/dev/null; then
+        echo "[entrypoint] WARN: failed to set GID=${HOST_GID} for group '${USERNAME}'" >&2
+    fi
 fi
 
 try_set() {
@@ -24,7 +32,7 @@ try_set sysctl -w net.ipv4.ipfrag_high_thresh=134217728
 # shellcheck source=/dev/null
 source "/opt/ros/${ROS_DISTRO}/setup.bash"
 
-if [ "${AUTOWARE_RUNTIME}" = "1" ] && [ -f /opt/autoware/setup.bash ]; then
+if [ "${AUTOWARE_RUNTIME:-}" = "1" ] && [ -f /opt/autoware/setup.bash ]; then
     # shellcheck source=/dev/null
     source /opt/autoware/setup.bash
 fi

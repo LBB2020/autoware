@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/bin/bash
+set -euo pipefail
 
 ansible_args=()
 ansible_args+=("--extra-vars" "data_dir=$HOME/autoware_data/ml_models")
