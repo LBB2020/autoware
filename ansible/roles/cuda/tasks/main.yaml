@@ -121,6 +121,7 @@
   ansible.builtin.get_url:
     url: https://gitlab.com/nvidia/container-images/vulkan/raw/dc389b0445c788901fda1d85be96fd1cb9410164/nvidia_icd.json
     dest: /etc/vulkan/icd.d/nvidia_icd.json
+    checksum: sha256:635ba6882e976a5473af2881b76fdc20ef4794fc70f68a2c193b183ed85e40e1
     mode: "0644"
 
 - name: Set permissions for Vulkan GPU vendors
@@ -134,6 +135,7 @@
   ansible.builtin.get_url:
     url: https://gitlab.com/nvidia/container-images/opengl/raw/5191cf205d3e4bb1150091f9464499b076104354/glvnd/runtime/10_nvidia.json
     dest: /etc/glvnd/egl_vendor.d/10_nvidia.json
+    checksum: sha256:9e6f14afaa7523370ad96e6675d3357441ee3985e60405cb3e0ced30b2ddaf76
     mode: "0644"
 
 - name: Set permissions for OpenGL GPU vendors
